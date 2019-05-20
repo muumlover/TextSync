@@ -5,8 +5,13 @@
     <title>Text Sync</title>
     <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
     <script type="text/javascript" src="//static.runoob.com/assets/qrcode/qrcode.min.js"></script>
+    <script type="text/javascript" src="//cdn.bootcss.com/event-source-polyfill/0.0.9/eventsource.js"></script>
 </head>
 <body>
+  <!--[if IE]>
+    This content is ignored in IE10 and other browsers.
+    In older versions of IE it renders as part of the page.
+  <![endif]-->
 <h1>Text sync addr:</h1>
 <div id="url"></div>
 <div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
@@ -15,7 +20,7 @@
 <div id="response"></div>
 <script type="text/javascript">
     console.log({{ sync_id|tojson }});
-    const qrcode = new QRCode(document.getElementById("qrcode"), {
+    var qrcode = new QRCode(document.getElementById("qrcode"), {
         width: 100,
         height: 100
     });
