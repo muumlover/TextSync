@@ -3,27 +3,31 @@
 <head>
     <meta charset="UTF-8">
     <title>Text Sync</title>
-    <script type="text/javascript" src="//cdn.staticfile.org/jquery/2.1.1/jquery.min.js"></script>
-    <script type="text/javascript" src="//static.runoob.com/assets/qrcode/qrcode.min.js"></script>
-    <script type="text/javascript" src="//cdn.bootcss.com/event-source-polyfill/0.0.9/eventsource.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/jquery@3.4.1/dist/jquery.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/qrcode@1.3.3/build/qrcode.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/event-source-polyfill@1.0.5/src/eventsource.min.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.js"></script>
+    <script src="/static/js/index.js"></script>
+    <link rel="stylesheet" href="//cdn.jsdelivr.net/npm/semantic-ui@2.4.2/dist/semantic.min.css">
 </head>
 <body>
-  <!--[if IE]>
+<!--[if IE]>
     This content is ignored in IE10 and other browsers.
     In older versions of IE it renders as part of the page.
   <![endif]-->
 <h1>Text sync addr:</h1>
 <div id="url"></div>
-<div id="qrcode" style="width:100px; height:100px; margin-top:15px;"></div>
+<div style="width:100px; height:100px; margin-top:15px;">
+    <canvas id="qrcode"></canvas>
+</div>
 <h1>Text sync from server:</h1>
-<button id="send">发送</button>
+<div class="ui action input">
+    <input type="text" class="data-send" placeholder="请输入...">
+    <button class="ui button send">发送</button>
+</div>
 <div id="response"></div>
 <script type="text/javascript">
     console.log({{ sync_id|tojson }});
-    var qrcode = new QRCode(document.getElementById("qrcode"), {
-        width: 100,
-        height: 100
-    });
 
     function sseInit() {
         var evtSource = new EventSource("/sync/{{ sync_id }}");
@@ -33,15 +37,38 @@
         }
     }
 
+    function qrcodeInit() {
+        QRCode.toCanvas(document.getElementById('qrcode'), window.location.href, function (error) {
+            if (error) console.error(error);
+            console.log('success!');
+        })
+    }
+
     function initialize() {
         sseInit();
-        qrcode.makeCode(window.location.href);
+        qrcodeInit();
         document.getElementById('url').innerText = window.location.href
     }
 
-    $('#send').on('click', function () {
+    $('.button.send').on('click', function () {
         console.log({{ sync_id|tojson }});
-        $.ajax("/send/{{ sync_id }}")
+        $.ajax({
+            type: "post",
+            url: "/send/{{ sync_id }}",
+            async: false, // 使用同步方式
+            // 1 需要使用JSON.stringify 否则格式为 a=2&b=3&now=14...
+            // 2 需要强制类型转换，否则格式为 {"a":"2","b":"3"}
+            data: JSON.stringify({
+                text: $('.data-send').val()
+            }),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                {#$('#result').text(data.result);#}
+                console.log(data.result);
+            } // 注意不要在此行增加逗号
+
+        })
     });
     initialize();
 </script>
