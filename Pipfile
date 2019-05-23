@@ -6,18 +6,9 @@ verify_ssl = true
 [dev-packages]
 
 [packages]
-aiohttp = "==3.5.4"
-aiohttp-jinja2 = "==1.1.1"
-aiohttp-sse = "==2.0.0"
-async-timeout = "==3.0.1"
-attrs = "==19.1.0"
-chardet = "==3.0.4"
-idna = "==2.8"
-jinja2 = "==2.10.1"
-markupsafe = "==1.1.1"
-multidict = "==4.5.2"
-yarl = "==1.3.0"
-idna-ssl = "*"
+aiohttp = "*"
+aiohttp-jinja2 = "*"
+aiohttp-sse = "*"
 
 [requires]
 python_version = "3.7"
