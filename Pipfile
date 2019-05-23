@@ -17,6 +17,7 @@ jinja2 = "==2.10.1"
 markupsafe = "==1.1.1"
 multidict = "==4.5.2"
 yarl = "==1.3.0"
+idna-ssl = "*"
 
 [requires]
 python_version = "3.7"
