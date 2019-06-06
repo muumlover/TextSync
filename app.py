@@ -65,4 +65,6 @@ app.router.add_route('GET', '/{uuid}', sync)
 app.router.add_route('GET', '/sync/{uuid}', text_sync)
 app.router.add_route('POST', '/send/{uuid}', text_send)
 app.router.add_static('/static', './static')
-web.run_app(app, host='0.0.0.0', port=8080)
+
+if __name__ == '__main__':
+    web.run_app(app, host='0.0.0.0', port=8080)
